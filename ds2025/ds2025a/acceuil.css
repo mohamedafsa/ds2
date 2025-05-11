@@ -1,0 +1,155 @@
+/* Réinitialisation de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f9;
+}
+
+/* En-tête */
+header {
+    background: #004d7a;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo img {
+    height: 50px;
+}
+
+header .navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+header .navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header .navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Section Hero avec animation de background */
+.hero {
+    text-align: center;
+    padding: 3rem 1rem;
+    height: 60vh;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    animation: slideshow 12s infinite; /* Animation pour changer les images */
+}
+
+@keyframes slideshow {
+    0%, 33.33% {
+        background-image: url('essect1.jpg'); /* Première image */
+    }
+    33.34%, 66.66% {
+        background-image: url('essect2.jpg'); /* Deuxième image */
+    }
+    66.67%, 100% {
+        background-image: url('essect3.jpg'); /* Troisième image */
+    }
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    z-index: 2;
+    position: relative;
+}
+
+.hero p {
+    margin-bottom: 1.5rem;
+    z-index: 2;
+    position: relative;
+}
+
+.hero .btn {
+    background: #ff6700;
+    color: white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    z-index: 2;
+    position: relative;
+}
+
+.hero .btn:hover {
+    background: #ff4500;
+}
+
+/* Overlay pour rendre le texte lisible */
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Couche sombre transparente */
+    z-index: 1;
+}
+
+/* Sections */
+section {
+    padding: 2rem;
+    text-align: center;
+    background: white;
+    margin: 1rem auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+section .btn {
+    margin-top: 1rem;
+    display: inline-block;
+    background: #004d7a;
+    color: white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+section .btn:hover {
+    background: #003a5c;
+}
+
+/* Pied de page */
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+footer .socials a {
+    color: #ff6700;
+    text-decoration: none;
+}
+
+footer .socials a:hover {
+    text-decoration: underline;
+} 
+

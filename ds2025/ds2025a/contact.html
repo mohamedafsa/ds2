@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - ESSECT</title>
+    <style>
+        /* Réinitialisation de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #004d7a;
+        }
+
+        /* Styles pour le Chatbot */
+        .chatbot {
+            margin: 1rem auto 0 auto;
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f9f9f9;
+            height: 300px; /* Taille fixe pour la zone de messages */
+        }
+
+        .chatbot-messages p {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            max-width: 80%;
+        }
+
+        .chatbot-messages .bot-message {
+            background: #004d7a;
+            color: white;
+            align-self: flex-start;
+        }
+
+        .chatbot-messages .user-message {
+            background: #ff6700;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            padding: 0.5rem 1rem;
+            background: #004d7a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .chatbot-input button:hover {
+            background: #003a5c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Contactez-nous</h2>
+        <div class="chatbot" id="chatbot">
+            <div class="chatbot-messages" id="chatbot-messages"></div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Posez votre question...">
+                <button id="chatbot-send">Envoyer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Réponses prédéfinies
+        const responses = {
+            "bonjour": "Bonjour ! Comment puis-je vous aider aujourd'hui ?",
+            "quels sont vos programmes ?": "Nous proposons divers programmes en gestion, informatique, finance, et marketing.",
+            "quels sont les événements à venir ?": "Consultez notre page des événements pour les détails. Les prochains événements incluent un séminaire le 20 décembre.",
+            "comment contacter l'administration ?": "Vous pouvez envoyer un email à administration@essect.tn ou appeler au +216 71 000 000.",
+            "merci": "Avec plaisir ! N'hésitez pas si vous avez d'autres questions.",
+        };
+
+        // Initialisation du chatbot
+        document.getElementById("chatbot-send").addEventListener("click", () => {
+            const inputField = document.getElementById("chatbot-input");
+            const userInput = inputField.value.trim().toLowerCase();
+            const messagesContainer = document.getElementById("chatbot-messages");
+
+            if (userInput) {
+                // Ajouter le message de l'utilisateur
+                const userMessage = document.createElement("p");
+                userMessage.className = "user-message";
+                userMessage.textContent = inputField.value;
+                messagesContainer.appendChild(userMessage);
+
+                // Répondre avec le chatbot
+                const botMessage = document.createElement("p");
+                botMessage.className = "bot-message";
+
+                if (responses[userInput]) {
+                    botMessage.textContent = responses[userInput];
+                } else {
+                    botMessage.textContent = "Je suis désolé, je n'ai pas compris votre question.";
+                }
+
+                messagesContainer.appendChild(botMessage);
+
+                // Défilement automatique vers le bas
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                // Effacer l'entrée de l'utilisateur
+                inputField.value = "";
+            }
+        });
+    </script>
+</body>
+</html>
