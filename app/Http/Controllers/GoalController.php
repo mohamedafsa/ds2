@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateGoalRequest;
 use App\Models\Goal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use OpenAI\Client;
+use OpenAI;
 
 class GoalController extends Controller
 {
@@ -42,18 +42,54 @@ class GoalController extends Controller
         $goal->delete();
         return response()->json(null, 204);
     }
+    public function suggestSteps(Request $request)
+    {
+        $client = OpenAI::client(env('OPENAI_API_KEY'));
+    
+        try {
+            $response = $client->chat()->create([
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
+                    ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+                    ['role' => 'user', 'content' => 'What is Laravel?'],
+                ],
+            ]);
+    
+            // Retourne la réponse sous forme de JSON
+            return response()->json(['steps' => $response->choices[0]->message->content]);
+    
+        } catch (\Exception $e) {
+            // Capture l'erreur et retourne un message d'erreur
+            return response()->json(['error' => 'An error occurred while fetching the AI suggestions.', 'message' => $e->getMessage()], 500);
+        }echo $response->choices[0]->message->content;
+    }
+    
 
-    public function suggestSteps(Request $request, Goal $goal, Client $openAI)
+
+   /* public function suggestSteps(Request $request, Goal $goal, Client $openAI)
     {
         $this->authorize('update', $goal);
+
+        // Récupérer la clé API depuis les variables d'environnement
+        $apiKey = env('OPENAI_API_KEY');
+
+        if (!$apiKey) {
+            return response()->json(['error' => 'API Key not set'], 500);
+        }
+
         $prompt = "Suggest 5 intermediate steps for achieving the goal: {$goal->title}. Provide concise steps.";
+        
+        // Utilisation de la clé API
         $response = $openAI->completions()->create([
             'model' => 'text-davinci-003',
             'prompt' => $prompt,
             'max_tokens' => 100,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $apiKey
+            ]
         ]);
 
         $steps = explode("\n", trim($response->choices[0]->text));
         return response()->json(['suggested_steps' => array_filter($steps)]);
-    }
+    }*/
 }

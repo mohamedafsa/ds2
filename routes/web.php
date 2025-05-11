@@ -10,11 +10,12 @@ use App\Http\Controllers\JournalController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GoalController;
 
 Route::middleware('web')->group(function () {
     // Page d'accueil
     Route::get('/', function () {
-        return view('welcome');
+        return view('dashboard');
     });
 
     // Routes d'authentification
@@ -44,7 +45,9 @@ Route::middleware('web')->group(function () {
 
         // Autres routes protégées
         Route::get('/maps', [MapController::class, 'index'])->name('maps.index');
-        Route::post('/maps', [MapController::class, 'store'])->name('maps.store');
+        Route::post('/map-pins', [MapController::class, 'store'])->name('maps.store');
+
+        //Route::post('/maps', [MapController::class, 'store'])->name('maps.store');
 
         Route::get('/timeline', [TimelineController::class, 'index'])->name('timeline.index');
         Route::post('/timeline', [TimelineController::class, 'store'])->name('timeline.store');
@@ -61,4 +64,12 @@ Route::middleware('web')->group(function () {
         Route::post('/friends/request', [FriendController::class, 'request'])->name('friends.request');
         Route::post('/friends/{friend}/accept', [FriendController::class, 'accept'])->name('friends.accept');
     });
+   
+Route::post('/suggest-steps', [GoalController::class, 'suggestSteps'])->middleware('auth');
+
+
+
+Route::get('/test', function () {
+    return 'Test OK';
+});
 });

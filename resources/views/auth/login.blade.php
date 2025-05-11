@@ -37,5 +37,5 @@
             </div>
         </div>
     </div>
-</div><ww
+</div>
 @endsection

@@ -70,38 +70,41 @@
 </div>
 @section('scripts')
 <script>
-    function suggestSteps() {
-        // Mock AI suggestions (replace with OpenAI/Gemini API call)
-        const suggestions = [
-            "Step 1: Research and plan your goal",
-            "Step 2: Set milestones and deadlines",
-            "Step 3: Track progress weekly",
-        ];
+  function suggestSteps() {
+    const title = document.getElementById('title').value;
+
+    fetch('/suggest-steps', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ title: title })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Assure-toi de recevoir du JSON
+    })
+    .then(data => {
+        const steps = data.steps; // ✅ ici, "data" est bien défini
         document.getElementById('suggested-steps').innerHTML = `
             <div class="alert alert-info">
-                <strong>Suggested Steps:</strong>
+                <strong>AI Suggested Steps:</strong>
                 <ul class="list-group mt-2">
-                    ${suggestions.map(step => `<li class="list-group-item">${step}</li>`).join('')}
+                    ${steps.split('\n').map(step => `<li class="list-group-item">${step}</li>`).join('')}
                 </ul>
             </div>
         `;
-        // Example OpenAI API call (requires API key):
-        
-        fetch('https://api.openai.com/v1/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer YOUR_API_KEY'
-            },
-            body: JSON.stringify({
-                model: 'text-davinci-003',
-                prompt: 'Suggest 3 intermediate steps for the goal: ' + document.getElementById('title').value,
-                max_tokens: 100
-            })
-        }).then(response => response.json()).then(data => {
-            // Process AI response
-        });
-        
-    }
+    })
+    .catch(error => {
+        console.error("Error fetching AI suggestions:", error);
+        alert("There was an error fetching AI suggestions. Please try again.");
+    });
+}
+
+
+
 </script>
 @endsection

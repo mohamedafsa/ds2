@@ -1,25 +1,52 @@
+<!-- resources/views/auth/forgot-password.blade.php -->
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS for animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <div class="container py-12">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card" data-aos="fade-up">
+                    <div class="card-body p-5">
+                        <h2 class="card-title text-center mb-4">Forgot Password</h2>
+                        <p class="text-center mb-4">Enter your email address to receive a password reset link.</p>
+
+                        <x-auth-session-status class="mb-4" :status="session('status')" />
+
+                        <form method="POST" action="{{ route('password.email') }}">
+                            @csrf
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <x-input-label for="email" :value="__('Email')" />
+                                <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus />
+                                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-flex justify-content-end">
+                                <x-primary-button>
+                                    {{ __('Send Reset Link') }}
+                                </x-primary-button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
 </x-guest-layout>

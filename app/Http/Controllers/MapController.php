@@ -1,44 +1,50 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\MapPin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\MapPin;  // Le modèle pour gérer les épingles
+use App\Models\Goal;    // Le modèle Goal si tu as des objectifs associés à chaque épingle
 
 class MapController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
+    // Affiche la carte avec les épingles
     public function index()
     {
-        $mapPins = Auth::user()->mapPins()->with('goal')->get();
-        $goals = Auth::user()->goals()->whereIn('visibility', ['public', 'friends'])->get();
-        return view('maps.index', compact('mapPins', 'goals'));
+        // Assurer que l'utilisateur est connecté
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+    
+        // Récupérer les épingles associées à l'utilisateur connecté
+        $mapPins = MapPin::with('goal')
+                        ->where('user_id', auth()->id()) // Assurer qu'on récupère seulement les épingles de l'utilisateur connecté
+                        ->get();
+    
+        // Retourner la vue avec les épingles
+        return view('maps.index', compact('mapPins'));
     }
+    
+    
+    
 
+    // Sauvegarde une nouvelle épingle
     public function store(Request $request)
     {
-        $request->validate([
-            'goal_id' => 'required|exists:goals,id',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-            'location_name' => 'nullable|string|max:255',
+        // Valider les données envoyées
+        $validated = $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'goal_id' => 'required|exists:goals,id',  // Assure-toi que l'ID de l'objectif est valide
         ]);
 
-        $goal = Auth::user()->goals()->findOrFail($request->goal_id);
-
-        Auth::user()->mapPins()->create([
-            'goal_id' => $goal->id,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'location_name' => $request->location_name,
-            'user_id' => Auth::id(),
+        // Crée une nouvelle épingle
+        MapPin::create([
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
+            'goal_id' => $validated['goal_id'],
         ]);
 
-        return response()->json(['message' => 'Pin added successfully']);
+        // Retourner une réponse
+        return response()->json(['message' => 'Épingle ajoutée avec succès.'], 200);
     }
 }
